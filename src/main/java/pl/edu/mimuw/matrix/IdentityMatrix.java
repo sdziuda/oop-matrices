@@ -6,50 +6,40 @@ public class IdentityMatrix implements IDoubleMatrix {
     private final int size;
 
     public IdentityMatrix(int size) {
+        assert size > 0;
+
         this.size = size;
     }
 
+    @Override
     public IDoubleMatrix times(IDoubleMatrix other) {
-        assert other.shape().columns == this.shape().rows && other.shape().rows == this.shape().columns;
-        return other;
-    }
+        assert this.shape().columns == other.shape().rows;
 
-    public IDoubleMatrix times(double scalar) {
-        double[] values = new double[size];
-        for (int i = 0; i < size; i++) {
-            values[i] = scalar;
-        }
-        return new DiagonalMatrix(values);
-    }
+        final double[][] values = new double[other.shape().rows][other.shape().columns];
 
-    public IDoubleMatrix plus(IDoubleMatrix other) {
-        assert other.shape().equals(this.shape());
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    public IDoubleMatrix plus(double scalar) {
-        double[][] values = new double[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                values[i][j] = scalar;
-                if (i == j) {
-                    values[i][j]++;
-                }
+        for (int i = 0; i < other.shape().rows; i++) {
+            for (int j = 0; j < other.shape().columns; j++) {
+                values[i][j] = other.get(i, j);
             }
         }
+
         return new FullMatrix(values);
     }
 
-    public IDoubleMatrix minus(IDoubleMatrix other) {
-        assert other.shape().equals(this.shape());
-        throw new UnsupportedOperationException("TODO");
-    }
+    @Override
+    public IDoubleMatrix times(double scalar) {
+        final double[] values = new double[this.size];
 
-    public IDoubleMatrix minus(double scalar) {
-        return this.plus(-scalar);
+        for (int i = 0; i < this.size; i++) {
+            values[i] = scalar;
+        }
+
+        return new DiagonalMatrix(values);
     }
 
     public double get(int row, int column) {
+        this.shape().assertInShape(row, column);
+
         if (row == column) {
             return 1;
         } else {
@@ -58,8 +48,8 @@ public class IdentityMatrix implements IDoubleMatrix {
     }
 
     public double[][] data() {
-        double[][] values = new double[size][size];
-        for (int i = 0; i < size; i++) {
+        double[][] values = new double[this.size][this.size];
+        for (int i = 0; i < this.size; i++) {
             values[i][i] = 1;
         }
         return values;
@@ -74,7 +64,7 @@ public class IdentityMatrix implements IDoubleMatrix {
     }
 
     public double frobeniusNorm() {
-        return sqrt(size);
+        return sqrt(this.size);
     }
 
     @Override

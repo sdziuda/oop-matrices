@@ -6,38 +6,31 @@ public class DiagonalMatrix extends DiagonalIshMatrix{
         super(values);
     }
 
-    public IDoubleMatrix times(IDoubleMatrix other) {
-        throw new UnsupportedOperationException("TODO");
+    @Override
+    public IDoubleMatrix times(double scalar) {
+        final double[] result = new double[this.values.length];
+
+        for (int i = 0; i < this.values.length; i++) {
+            result[i] = this.values[i] * scalar;
+        }
+
+        return new DiagonalMatrix(result);
     }
 
-    public IDoubleMatrix plus(IDoubleMatrix other) {
-        throw new UnsupportedOperationException("TODO");
-    }
+    public double get(int row, int column) {
+        this.shape().assertInShape(row, column);
 
-    public IDoubleMatrix plus(double scalar) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    public IDoubleMatrix minus(IDoubleMatrix other) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    public IDoubleMatrix minus(double scalar) {
-        return this.plus(-scalar);
-    }
-
-    public double get(int i, int j) {
-        if (i == j) {
-            return values[i];
+        if (row == column) {
+            return this.values[row];
         } else {
             return 0;
         }
     }
 
     public double[][] data() {
-        double[][] result = new double[values.length][values.length];
-        for (int i = 0; i < values.length; i++) {
-            result[i][i] = values[i];
+        final double[][] result = new double[this.values.length][this.values.length];
+        for (int i = 0; i < this.values.length; i++) {
+            result[i][i] = this.values[i];
         }
         return result;
     }

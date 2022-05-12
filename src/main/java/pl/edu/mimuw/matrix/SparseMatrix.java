@@ -1,32 +1,30 @@
 package pl.edu.mimuw.matrix;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.Math.*;
 
-// Ewentualnie można wywalić sparse i full do jakiejś abstrkcyjnej i będą się tylko różnić getem
+//Trzeba jakoś zoptymalizować dodawania/odejmowania/mnożenia sparsów
 public class SparseMatrix implements IDoubleMatrix {
     private final Shape shape;
-    private final MatrixCellValue[] values;
+    private final List<MatrixCellValue>[] values;
 
-    public SparseMatrix(Shape shape, MatrixCellValue[] values) {
+    public SparseMatrix(Shape shape, MatrixCellValue... values) {
+        assert shape.rows > 0 && shape.columns > 0;
+
         this.shape = shape;
-        this.values = values;
-    }
 
-    public IDoubleMatrix times(IDoubleMatrix other) {
-        assert this.shape().columns == other.shape().rows && this.shape().rows == other.shape().columns;
-        double[][] result = new double[this.shape().rows][other.shape().columns];
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < other.shape().columns; j++) {
-                for (int k = 0; k < this.shape().columns; k++) {
-                    result[i][j] += this.get(i, k) * other.get(k, j);
-                }
-            }
+        assert values != null;
+        for (var value : values) {
+            shape.assertInShape(value.row, value.column);
         }
-        return new FullMatrix(result);
+
+        this.values = new ArrayList[shape.columns];
     }
 
+    @Override
     public IDoubleMatrix times(double scalar) {
         return new SparseMatrix(this.shape(),
                 Arrays.stream(this.values)
@@ -34,99 +32,71 @@ public class SparseMatrix implements IDoubleMatrix {
                         .toArray(MatrixCellValue[]::new));
     }
 
+    @Override
     public IDoubleMatrix plus(IDoubleMatrix other) {
         assert this.shape().equals(other.shape());
-        double[][] result = new double[this.shape().rows][this.shape().columns];
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < this.shape().columns; j++) {
-                result[i][j] = this.get(i, j) + other.get(i, j);
-            }
-        }
-        return new FullMatrix(result);
-    }
 
-    public IDoubleMatrix plus(double scalar) {
-        double[][] result = new double[this.shape().rows][this.shape().columns];
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < this.shape().columns; j++) {
-                result[i][j] = this.get(i, j) + scalar;
-            }
-        }
-        return new FullMatrix(result);
-    }
+        if (this.getClass() == other.getClass()) {
+            MatrixCellValue[] newValues = new MatrixCellValue[this.values.length];
+            int i = 0;
 
-    public IDoubleMatrix minus(IDoubleMatrix other) {
-        assert this.shape().equals(other.shape());
-        double[][] result = new double[this.shape().rows][this.shape().columns];
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < this.shape().columns; j++) {
-                result[i][j] = this.get(i, j) - other.get(i, j);
-            }
-        }
-        return new FullMatrix(result);
-    }
+            for (int i = 0; i < this.values.length; i++) {
 
-    public IDoubleMatrix minus(double scalar) {
-        double[][] result = new double[this.shape().rows][this.shape().columns];
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < this.shape().columns; j++) {
-                result[i][j] = this.get(i, j) - scalar;
             }
+        } else {
+
         }
-        return new FullMatrix(result);
     }
 
     public double get(int row, int column) {
-        for (MatrixCellValue value : values) {
+        this.shape.assertInShape(row, column);
+
+        for (MatrixCellValue value : this.values) {
             if (value.row == row && value.column == column) {
                 return value.value;
             }
         }
+
         return 0;
     }
 
     public double[][] data() {
-        double[][] result = new double[this.shape().rows][this.shape().columns];
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < this.shape().columns; j++) {
-                result[i][j] = this.get(i, j);
-            }
+        final double[][] result = new double[this.shape().rows][this.shape().columns];
+
+        for (var value : this.values) {
+            result[value.row][value.column] = value.value;
         }
+
         return result;
     }
-
 
     public double normOne() {
-        double result = 0;
-        for (int i = 0; i < this.shape().columns; i++) {
-            double sum = 0;
-            for (int j = 0; j < this.shape().rows; j++) {
-                sum += abs(this.get(j, i));
-            }
-            result = max(result, sum);
+        final double[] columnSums = new double[this.shape().columns];
+
+        for (var value : this.values) {
+            columnSums[value.column] += abs(value.value);
         }
-        return result;
+
+        return Arrays.stream(columnSums).max().isPresent() ? Arrays.stream(columnSums).max().getAsDouble() : 0;
     }
-    //TODO: usprawnić obliczanie normy dla tego typu macierzy
+
     public double normInfinity() {
-        double result = 0;
-        for (int i = 0; i < this.shape().rows; i++) {
-            double sum = 0;
-            for (int j = 0; j < this.shape().columns; j++) {
-                sum += abs(this.get(i, j));
-            }
-            result = max(result, sum);
+        final double[] rowSums = new double[this.shape().rows];
+
+        for (var value : this.values) {
+            rowSums[value.row] += abs(value.value);
         }
-        return result;
+
+        return Arrays.stream(rowSums).max().isPresent() ? Arrays.stream(rowSums).max().getAsDouble() : 0;
     }
 
     public double frobeniusNorm() {
         double result = 0;
-        for (int i = 0; i < this.shape().rows; i++) {
-            for (int j = 0; j < this.shape().columns; j++) {
-                result += this.get(i, j) * this.get(i, j);
-            }
+
+        for (var value : this.values) {
+            result += value.value * value.value;
         }
+
         return sqrt(result);
     }
 

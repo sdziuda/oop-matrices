@@ -6,28 +6,21 @@ public class AntiDiagonalMatrix extends DiagonalIshMatrix{
         super(values);
     }
 
-    public IDoubleMatrix times(IDoubleMatrix other) {
-        throw new UnsupportedOperationException("TODO");
-    }
+    @Override
+    public IDoubleMatrix times(double scalar) {
+        final double[] result = new double[this.values.length];
 
-    public IDoubleMatrix plus(IDoubleMatrix other) {
-        throw new UnsupportedOperationException("TODO");
-    }
+        for (int i = 0; i < this.values.length; i++) {
+            result[i] = this.values[i] * scalar;
+        }
 
-    public IDoubleMatrix plus(double scalar) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    public IDoubleMatrix minus(IDoubleMatrix other) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    public IDoubleMatrix minus(double scalar) {
-        throw new UnsupportedOperationException("TODO");
+        return new AntiDiagonalMatrix(result);
     }
 
     public double get(int row, int column) {
-        if (row + column == this.values.length) {
+        this.shape().assertInShape(row, column);
+
+        if (row + column == this.values.length - 1) {
             return this.values[column];
         } else {
             return 0;
@@ -35,12 +28,11 @@ public class AntiDiagonalMatrix extends DiagonalIshMatrix{
     }
 
     public double[][] data() {
-        final int n = this.values.length;
-        double[][] data = new double[n][n];
-        for (int i = 0; i < n; i++) {
-            data[n - i - 1][i] = this.values[i];
+        final double[][] result = new double[this.values.length][this.values.length];
+        for (int i = 0; i < this.values.length; i++) {
+            result[this.values.length - i - 1][i] = this.values[i];
         }
-        return data;
+        return result;
     }
 
     @Override

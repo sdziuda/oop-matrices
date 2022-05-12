@@ -6,67 +6,78 @@ public class Vector implements IDoubleMatrix {
     private final double[] values;
 
     public Vector(double... values) {
+        assert values != null && values.length > 0;
+
         this.values = values;
     }
 
-    public IDoubleMatrix times(IDoubleMatrix other) {
-        assert other.shape().equals(this.shape());
-        double[] result = new double[this.shape().rows];
-        for (int i = 0; i < this.shape().rows; i++) {
-            result[i] = this.get(i, 0) * other.get(i, 0);
-        }
-        return new Vector(result);
-    }
-
+    @Override
     public IDoubleMatrix times(double scalar) {
-        double[] result = new double[this.shape().rows];
+        final double[] result = new double[this.shape().rows];
+
         for (int i = 0; i < this.shape().rows; i++) {
-            result[i] = this.get(0, i) * scalar;
+            result[i] = this.get(i, 0) * scalar;
         }
+
         return new Vector(result);
     }
 
+    @Override
     public IDoubleMatrix plus(IDoubleMatrix other) {
-        assert other.shape().equals(this.shape());
-        double[] result = new double[this.shape().rows];
+        assert this.shape().equals(other.shape());
+
+        final double[] result = new double[this.shape().rows];
+
         for (int i = 0; i < this.shape().rows; i++) {
             result[i] = this.get(i, 0) + other.get(i, 0);
         }
+
         return new Vector(result);
     }
 
+    @Override
     public IDoubleMatrix plus(double scalar) {
-        double[] result = new double[this.shape().rows];
+        final double[] result = new double[this.shape().rows];
+
         for (int i = 0; i < this.shape().rows; i++) {
-            result[i] = this.get(0, i) + scalar;
+            result[i] = this.get(i, 0) + scalar;
         }
+
         return new Vector(result);
     }
 
+    @Override
     public IDoubleMatrix minus(IDoubleMatrix other) {
-        assert other.shape().equals(this.shape());
-        double[] result = new double[this.shape().rows];
+        assert this.shape().equals(other.shape());
+
+        final double[] result = new double[this.shape().rows];
+
         for (int i = 0; i < this.shape().rows; i++) {
             result[i] = this.get(i, 0) - other.get(i, 0);
         }
+
         return new Vector(result);
     }
 
+    @Override
     public IDoubleMatrix minus(double scalar) {
-        double[] result = new double[this.shape().rows];
+        final double[] result = new double[this.shape().rows];
+
         for (int i = 0; i < this.shape().rows; i++) {
-            result[i] = this.get(0, i) - scalar;
+            result[i] = this.get(i, 0) - scalar;
         }
+
         return new Vector(result);
     }
 
     public double get(int row, int column) {
-        assert row > 0 && row < this.values.length && column == 0;
+        this.shape().assertInShape(row, column);
+
         return this.values[row];
     }
 
     public double[][] data() {
-        double[][] result = new double[this.values.length][1];
+        final double[][] result = new double[this.values.length][1];
         for (int i = 0; i < this.values.length; i++) {
             result[i][0] = this.get(i, 0);
         }

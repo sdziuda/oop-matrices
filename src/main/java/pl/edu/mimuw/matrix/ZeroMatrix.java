@@ -4,39 +4,28 @@ public class ZeroMatrix implements IDoubleMatrix {
     private final Shape shape;
 
     public ZeroMatrix(Shape shape) {
+        assert shape.rows > 0 && shape.columns > 0;
+
         this.shape = shape;
     }
 
+    @Override
     public IDoubleMatrix times(IDoubleMatrix other) {
-        return new ZeroMatrix(shape);
+        return new ZeroMatrix(Shape.matrix(this.shape.rows, this.shape().columns));
     }
 
+    @Override
     public IDoubleMatrix times(double scalar) {
         return new ZeroMatrix(shape);
     }
 
-    public IDoubleMatrix plus(IDoubleMatrix other) {
-        return other;
-    }
-
-    public IDoubleMatrix plus(double scalar) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    public IDoubleMatrix minus(IDoubleMatrix other) {
-        return other.times(-1);
-    }
-
-    public IDoubleMatrix minus(double scalar) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
     public double get(int row, int column) {
+        this.shape.assertInShape(row, column);
         return 0;
     }
 
     public double[][] data() {
-        return new double[][] {};
+        return new double[this.shape.rows][this.shape.columns];
     }
 
     public double normOne() {
