@@ -1,6 +1,9 @@
 package pl.edu.mimuw.matrix;
 
-public class AntiDiagonalMatrix extends DiagonalIshMatrix{
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class AntiDiagonalMatrix extends DiagonalIshMatrix {
 
     public AntiDiagonalMatrix(double... values) {
         super(values);
@@ -37,6 +40,29 @@ public class AntiDiagonalMatrix extends DiagonalIshMatrix{
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("TODO");
+        final StringBuilder sb = new StringBuilder();
+        final double[][] data = this.data();
+
+        sb.append("Anti-diagonal matrix (").append(this.values.length).append("x").append(this.values.length)
+                .append("):\n");
+        for (int i = 0; i < this.values.length; i++) {
+            boolean dots = false;
+            for (int j = 0; j < this.values.length; j++) {
+                if (j > 0 && j < this.values.length - 1 && data[i][j] == data[i][j - 1] && data[i][j] == data[i][j + 1]
+                        && !dots) {
+
+                    sb.append("... ");
+                    dots = true;
+                } else if (j == 0 || j == this.values.length - 1 || i == this.values.length - j + 1
+                        || data[i][j] != data[i][j - 1] || data[i][j] != data[i][j + 1]) {
+
+                    sb.append(BigDecimal.valueOf(data[i][j]).setScale(1, RoundingMode.HALF_UP)).append(" ");
+                    dots = false;
+                }
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }

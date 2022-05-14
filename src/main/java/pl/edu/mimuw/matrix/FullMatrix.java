@@ -1,5 +1,8 @@
 package pl.edu.mimuw.matrix;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static java.lang.Math.*;
 
 public class FullMatrix implements IDoubleMatrix {
@@ -70,7 +73,17 @@ public class FullMatrix implements IDoubleMatrix {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("TODO");
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append("Full matrix (").append(this.shape().rows).append("x").append(this.shape().columns).append("):\n");
+        for (int i = 0; i < this.shape().rows; i++) {
+            for (int j = 0; j < this.shape().columns; j++) {
+                sb.append(BigDecimal.valueOf(this.values[i][j]).setScale(1, RoundingMode.HALF_UP)).append(" ");
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
     public Shape shape() {

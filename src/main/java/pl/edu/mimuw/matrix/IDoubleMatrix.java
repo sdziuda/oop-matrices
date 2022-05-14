@@ -6,6 +6,7 @@ public interface IDoubleMatrix {
         assert this.shape().columns == other.shape().rows;
 
         final double[][] result = new double[this.shape().rows][other.shape().columns];
+        final Shape resultShape = Shape.matrix(this.shape().rows, other.shape().columns);
         boolean isZero = true;
 
         for (int i = 0; i < this.shape().rows; i++) {
@@ -17,7 +18,7 @@ public interface IDoubleMatrix {
             }
         }
 
-        if (isZero) return new ZeroMatrix(this.shape());
+        if (isZero) return new ZeroMatrix(resultShape);
         return new FullMatrix(result);
     }
 

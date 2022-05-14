@@ -2,10 +2,10 @@ package pl.edu.mimuw.matrix;
 
 import static java.lang.Math.*;
 
-public abstract class DiagonalIshMatrix implements IDoubleMatrix{
+public abstract class DiagonalIshMatrix implements IDoubleMatrix {
     protected final double[] values;
 
-    protected DiagonalIshMatrix(double[] values){
+    protected DiagonalIshMatrix(double... values) {
         assert values != null && values.length > 0;
 
         this.values = values;

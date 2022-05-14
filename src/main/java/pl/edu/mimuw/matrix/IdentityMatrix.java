@@ -1,5 +1,8 @@
 package pl.edu.mimuw.matrix;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static java.lang.Math.sqrt;
 
 public class IdentityMatrix implements IDoubleMatrix {
@@ -15,15 +18,7 @@ public class IdentityMatrix implements IDoubleMatrix {
     public IDoubleMatrix times(IDoubleMatrix other) {
         assert this.shape().columns == other.shape().rows;
 
-        final double[][] values = new double[other.shape().rows][other.shape().columns];
-
-        for (int i = 0; i < other.shape().rows; i++) {
-            for (int j = 0; j < other.shape().columns; j++) {
-                values[i][j] = other.get(i, j);
-            }
-        }
-
-        return new FullMatrix(values);
+        return other;
     }
 
     @Override
@@ -49,9 +44,11 @@ public class IdentityMatrix implements IDoubleMatrix {
 
     public double[][] data() {
         double[][] values = new double[this.size][this.size];
+
         for (int i = 0; i < this.size; i++) {
             values[i][i] = 1;
         }
+
         return values;
     }
 
@@ -69,10 +66,32 @@ public class IdentityMatrix implements IDoubleMatrix {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("TODO");
+        final StringBuilder sb = new StringBuilder();
+        final double[][] data = this.data();
+
+        sb.append("Identity matrix (").append(this.size).append("x").append(this.size).append("):\n");
+        for (int i = 0; i < this.size; i++) {
+            boolean dots = false;
+            for (int j = 0; j < this.size; j++) {
+                if (j > 0 && j < this.size - 1 && data[i][j] == data[i][j - 1] && data[i][j] == data[i][j + 1]
+                        && !dots) {
+
+                    sb.append("... ");
+                    dots = true;
+                } else if (j == 0 || j == this.size - 1 || i == j || data[i][j] != data[i][j - 1]
+                        || data[i][j] != data[i][j + 1]) {
+
+                    sb.append(BigDecimal.valueOf(data[i][j]).setScale(1, RoundingMode.HALF_UP)).append(" ");
+                    dots = false;
+                }
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
     public Shape shape() {
-        return Shape.matrix(size, size);
+        return Shape.matrix(this.size, this.size);
     }
 }

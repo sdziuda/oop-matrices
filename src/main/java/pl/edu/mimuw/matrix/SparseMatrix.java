@@ -1,5 +1,7 @@
 package pl.edu.mimuw.matrix;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -299,7 +301,29 @@ public class SparseMatrix implements IDoubleMatrix {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("TODO");
+        final StringBuilder sb = new StringBuilder();
+        final double[][] data = this.data();
+
+        sb.append("Sparse matrix (").append(this.shape().rows).append("x").append(this.shape().columns).append("):\n");
+        for (double[] row : data) {
+            boolean dots = false;
+            for (int column = 0; column < row.length; column++) {
+                if (column > 0 && column < row.length - 1 && row[column] == row[column - 1]
+                        && row[column] == row[column + 1] && !dots) {
+
+                    sb.append("... ");
+                    dots = true;
+                } else if (column == 0 || column == row.length - 1 || row[column] != row[column - 1]
+                        || row[column] != row[column + 1]) {
+
+                    sb.append(BigDecimal.valueOf(row[column]).setScale(1, RoundingMode.HALF_UP)).append(" ");
+                    dots = false;
+                }
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
     public Shape shape() {
