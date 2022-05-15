@@ -16,7 +16,10 @@ public class FullMatrix implements IDoubleMatrix {
             assert row.length == columns;
         }
 
-        this.values = values;
+        this.values = new double[values.length][values[0].length];
+        for (int i = 0; i < values.length; i++) {
+            System.arraycopy(values[i], 0, this.values[i], 0, values[0].length);
+        }
     }
 
     public double get(int row, int column) {

@@ -8,7 +8,8 @@ public abstract class DiagonalIshMatrix implements IDoubleMatrix {
     protected DiagonalIshMatrix(double... values) {
         assert values != null && values.length > 0;
 
-        this.values = values;
+        this.values = new double[values.length];
+        System.arraycopy(values, 0, this.values, 0, values.length);
     }
 
     public double normOne() {

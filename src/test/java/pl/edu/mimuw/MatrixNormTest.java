@@ -77,6 +77,33 @@ public class MatrixNormTest {
         FROBENIUS_NORM
       );
     }
+
+    @Test
+    void testConst() {
+      testMatrixNorm(
+        constant(2, matrix(5, 5)),
+        IDoubleMatrix::frobeniusNorm,
+        sqrt(2 * 2 * 5 * 5)
+      );
+    }
+
+    @Test
+    void testRow() {
+      testMatrixNorm(
+        row(matrix(6, 6), 1, -2, 3, -4, 5, -6),
+        IDoubleMatrix::frobeniusNorm,
+        sqrt(6 + 4 * 6 + 9 * 6 + 16 * 6 + 25 * 6 + 36 * 6)
+      );
+    }
+
+    @Test
+    void testColumn() {
+      testMatrixNorm(
+        column(matrix(6, 6), 1, -2, 3, -4, 5, -6),
+        IDoubleMatrix::frobeniusNorm,
+        sqrt(6 + 4 * 6 + 9 * 6 + 16 * 6 + 25 * 6 + 36 * 6)
+      );
+    }
   }
 
   @Nested
@@ -138,6 +165,33 @@ public class MatrixNormTest {
         6
       );
     }
+
+    @Test
+    void testConst() {
+      testMatrixNorm(
+        constant(2, matrix(5, 5)),
+        IDoubleMatrix::normOne,
+        2 * 5
+      );
+    }
+
+    @Test
+    void testRow() {
+      testMatrixNorm(
+        row(matrix(6, 6), 1, -2, 3, -4, 5, -6),
+        IDoubleMatrix::normOne,
+        1 + 2 + 3 + 4 + 5 + 6
+      );
+    }
+
+    @Test
+    void testColumn() {
+      testMatrixNorm(
+        column(matrix(6, 6), 1, -2, 3, -4, 5, -6),
+        IDoubleMatrix::normOne,
+        6 * 6
+      );
+    }
   }
 
   @Nested
@@ -197,6 +251,33 @@ public class MatrixNormTest {
         antiDiagonal(1, -2, 3, -4, 5, -6),
         IDoubleMatrix::normInfinity,
         6
+      );
+    }
+
+    @Test
+    void testConst() {
+      testMatrixNorm(
+        constant(2, matrix(5, 5)),
+        IDoubleMatrix::normInfinity,
+        2 * 5
+      );
+    }
+
+    @Test
+    void testRow() {
+      testMatrixNorm(
+        row(matrix(6, 6), 1, -2, 3, -4, 5, -6),
+        IDoubleMatrix::normInfinity,
+        6 * 6
+      );
+    }
+
+    @Test
+    void testColumn() {
+      testMatrixNorm(
+        column(matrix(6, 6), 1, -2, 3, -4, 5, -6),
+        IDoubleMatrix::normInfinity,
+        1 + 2 + 3 + 4 + 5 + 6
       );
     }
   }

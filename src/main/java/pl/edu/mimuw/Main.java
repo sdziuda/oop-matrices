@@ -23,6 +23,15 @@ public class Main {
         final var zeroMatrix = new ZeroMatrix(Shape.matrix(N, N));
         System.out.println(zeroMatrix);
 
+        final var constMatrix = new ConstMatrix(Math.round(Math.random() * 100) / 10.0, Shape.matrix(N, N));
+        System.out.println(constMatrix);
+
+        final var rowMatrix = new RowMatrix(Shape.matrix(N, N), randomValues());
+        System.out.println(rowMatrix);
+
+        final var columnMatrix = new ColumnMatrix(Shape.matrix(N, N), randomValues());
+        System.out.println(columnMatrix);
+
         final var diagonalMatrix = new DiagonalMatrix(randomValues());
         System.out.println(diagonalMatrix);
 

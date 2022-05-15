@@ -12,7 +12,8 @@ public class Vector implements IDoubleMatrix {
     public Vector(double... values) {
         assert values != null && values.length > 0;
 
-        this.values = values;
+        this.values = new double[values.length];
+        System.arraycopy(values, 0, this.values, 0, values.length);
     }
 
     @Override

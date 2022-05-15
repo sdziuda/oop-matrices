@@ -1,12 +1,9 @@
 package pl.edu.mimuw.matrix;
 
-public class ZeroMatrix implements IDoubleMatrix {
-    private final Shape shape;
+public class ZeroMatrix extends ConstMatrix {
 
     public ZeroMatrix(Shape shape) {
-        assert shape.rows > 0 && shape.columns > 0;
-
-        this.shape = shape;
+        super(0.0, shape);
     }
 
     @Override
@@ -21,23 +18,22 @@ public class ZeroMatrix implements IDoubleMatrix {
         return new ZeroMatrix(shape);
     }
 
-    public double get(int row, int column) {
-        this.shape.assertInShape(row, column);
-        return 0;
-    }
-
+    @Override
     public double[][] data() {
         return new double[this.shape.rows][this.shape.columns];
     }
 
+    @Override
     public double normOne() {
         return 0;
     }
 
+    @Override
     public double normInfinity() {
         return 0;
     }
 
+    @Override
     public double frobeniusNorm() {
         return 0;
     }
@@ -48,7 +44,7 @@ public class ZeroMatrix implements IDoubleMatrix {
 
         sb.append("Zero matrix (").append(this.shape.rows).append("x").append(this.shape.columns).append("):\n");
         for (int i = 0; i < this.shape.rows; i++) {
-            if (this.shape.columns >= 3) sb.append("0 ... 0");
+            if (this.shape.columns >= 3) sb.append("0.0 ... 0.0");
             else {
                 for (int j = 0; j < this.shape.columns; j++) {
                     sb.append("0.0");
@@ -60,9 +56,4 @@ public class ZeroMatrix implements IDoubleMatrix {
 
         return sb.toString();
     }
-
-    public Shape shape() {
-        return this.shape;
-    }
-
 }
