@@ -19,6 +19,20 @@ public class ZeroMatrix extends ConstMatrix {
     }
 
     @Override
+    public IDoubleMatrix plus(IDoubleMatrix other) {
+        assert this.shape.equals(other.shape());
+
+        return other;
+    }
+
+    @Override
+    public IDoubleMatrix minus(IDoubleMatrix other) {
+        assert this.shape.equals(other.shape());
+
+        return other.times(-1);
+    }
+
+    @Override
     public double[][] data() {
         return new double[this.shape.rows][this.shape.columns];
     }

@@ -2,14 +2,10 @@ package pl.edu.mimuw.matrix;
 
 import static java.lang.Math.*;
 
-public abstract class DiagonalIshMatrix implements IDoubleMatrix {
-    protected final double[] values;
+public abstract class DiagonalIshMatrix extends RegularMatrix {
 
     protected DiagonalIshMatrix(double... values) {
-        assert values != null && values.length > 0;
-
-        this.values = new double[values.length];
-        System.arraycopy(values, 0, this.values, 0, values.length);
+        super(Shape.matrix(values.length, values.length), values);
     }
 
     public double normOne() {
@@ -34,9 +30,5 @@ public abstract class DiagonalIshMatrix implements IDoubleMatrix {
             result += value * value;
         }
         return sqrt(result);
-    }
-
-    public Shape shape() {
-        return Shape.matrix(this.values.length, this.values.length);
     }
 }

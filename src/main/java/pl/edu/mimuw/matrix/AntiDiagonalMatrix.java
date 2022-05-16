@@ -32,9 +32,11 @@ public class AntiDiagonalMatrix extends DiagonalIshMatrix {
 
     public double[][] data() {
         final double[][] result = new double[this.values.length][this.values.length];
+
         for (int i = 0; i < this.values.length; i++) {
             result[this.values.length - i - 1][i] = this.values[i];
         }
+
         return result;
     }
 

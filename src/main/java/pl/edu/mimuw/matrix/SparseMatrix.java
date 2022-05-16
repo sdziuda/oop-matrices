@@ -306,19 +306,8 @@ public class SparseMatrix implements IDoubleMatrix {
 
         sb.append("Sparse matrix (").append(this.shape().rows).append("x").append(this.shape().columns).append("):\n");
         for (double[] row : data) {
-            boolean dots = false;
-            for (int column = 0; column < row.length; column++) {
-                if (column > 0 && column < row.length - 1 && row[column] == row[column - 1]
-                        && row[column] == row[column + 1] && !dots) {
-
-                    sb.append("... ");
-                    dots = true;
-                } else if (column == 0 || column == row.length - 1 || row[column] != row[column - 1]
-                        || row[column] != row[column + 1]) {
-
-                    sb.append(BigDecimal.valueOf(row[column]).setScale(1, RoundingMode.HALF_UP)).append(" ");
-                    dots = false;
-                }
+            for (double v : row) {
+                sb.append(BigDecimal.valueOf(v).setScale(1, RoundingMode.HALF_UP)).append(" ");
             }
             sb.append("\n");
         }

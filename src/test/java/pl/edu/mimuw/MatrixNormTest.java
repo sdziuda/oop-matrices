@@ -180,7 +180,7 @@ public class MatrixNormTest {
       testMatrixNorm(
         row(matrix(6, 6), 1, -2, 3, -4, 5, -6),
         IDoubleMatrix::normOne,
-        1 + 2 + 3 + 4 + 5 + 6
+        6 * 6
       );
     }
 
@@ -189,7 +189,7 @@ public class MatrixNormTest {
       testMatrixNorm(
         column(matrix(6, 6), 1, -2, 3, -4, 5, -6),
         IDoubleMatrix::normOne,
-        6 * 6
+        1 + 2 + 3 + 4 + 5 + 6
       );
     }
   }
@@ -268,7 +268,7 @@ public class MatrixNormTest {
       testMatrixNorm(
         row(matrix(6, 6), 1, -2, 3, -4, 5, -6),
         IDoubleMatrix::normInfinity,
-        6 * 6
+        1 + 2 + 3 + 4 + 5 + 6
       );
     }
 
@@ -277,7 +277,7 @@ public class MatrixNormTest {
       testMatrixNorm(
         column(matrix(6, 6), 1, -2, 3, -4, 5, -6),
         IDoubleMatrix::normInfinity,
-        1 + 2 + 3 + 4 + 5 + 6
+        6 * 6
       );
     }
   }

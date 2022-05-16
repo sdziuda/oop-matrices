@@ -1,5 +1,7 @@
 package pl.edu.mimuw.matrix;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 import static java.lang.Math.sqrt;
@@ -9,7 +11,7 @@ public class ColumnMatrix extends RegularMatrix {
     public ColumnMatrix(Shape shape, double[] values) {
         super(shape, values);
 
-        assert values.length == this.shape.columns;
+        assert values.length == this.shape.rows;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class ColumnMatrix extends RegularMatrix {
     public double get(int row, int column) {
         this.shape.assertInShape(row, column);
 
-        return this.values[column];
+        return this.values[row];
     }
 
     public double[][] data() {
@@ -38,7 +40,7 @@ public class ColumnMatrix extends RegularMatrix {
 
         for (int i = 0; i < this.shape.rows; i++) {
             for (int j = 0; j < this.shape.columns; j++) {
-                result[i][j] = this.values[j];
+                result[i][j] = this.values[i];
             }
         }
 
@@ -46,31 +48,35 @@ public class ColumnMatrix extends RegularMatrix {
     }
 
     public double normOne() {
-        return Arrays.stream(this.values).map(Math::abs).max().isPresent()
-                ? Arrays.stream(this.values).map(Math::abs).max().getAsDouble() * this.shape.rows : 0;
-    }
-
-    public double normInfinity() {
         return Arrays.stream(this.values).map(Math::abs).sum();
     }
 
+    public double normInfinity() {
+        return Arrays.stream(this.values).map(Math::abs).max().isPresent()
+                ? Arrays.stream(this.values).map(Math::abs).max().getAsDouble() * this.shape.columns : 0;
+    }
+
     public double frobeniusNorm() {
-        return sqrt(Arrays.stream(this.values).map(Math::abs).map(x -> x * x * this.shape.rows).sum());
+        return sqrt(Arrays.stream(this.values).map(Math::abs).map(x -> x * x * this.shape.columns).sum());
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final var sb = new StringBuilder();
 
         sb.append("Column matrix (").append(this.shape.rows).append("x").append(this.shape.columns).append("):\n");
         for (int i = 0; i < this.shape.rows; i++) {
-            for (int j = 0; j < this.shape.columns; j++) {
-                sb.append(this.values[j]).append(" ");
+            if (this.shape.columns >= 3) {
+                sb.append(BigDecimal.valueOf(this.values[i]).setScale(1, RoundingMode.HALF_UP)).append(" ... ")
+                        .append(BigDecimal.valueOf(this.values[i]).setScale(1, RoundingMode.HALF_UP));
+            } else {
+                for (int j = 0; j < this.shape.columns; j++) {
+                    sb.append(BigDecimal.valueOf(this.values[i]).setScale(1, RoundingMode.HALF_UP)).append(" ");
+                }
             }
             sb.append("\n");
         }
 
         return sb.toString();
     }
-
 }

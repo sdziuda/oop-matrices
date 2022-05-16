@@ -56,7 +56,7 @@ public class TestMatrixData {
 
   public static final IDoubleMatrix CONST_2X3 = constant(5, matrix(2, 3));
 
-  public static final IDoubleMatrix ROW_2X3 = row(matrix(2, 3), 1, 2);
+  public static final IDoubleMatrix ROW_3X2 = row(matrix(3, 2), 1, 2);
 
-  public static final IDoubleMatrix COLUMN_3X2 = column(matrix(3, 2), 1, 2);
+  public static final IDoubleMatrix COLUMN_2X3 = column(matrix(2, 3), 1, 2);
 }

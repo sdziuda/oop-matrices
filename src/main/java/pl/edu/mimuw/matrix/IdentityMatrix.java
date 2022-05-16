@@ -1,8 +1,5 @@
 package pl.edu.mimuw.matrix;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import static java.lang.Math.sqrt;
 
 public class IdentityMatrix implements IDoubleMatrix {
@@ -81,7 +78,7 @@ public class IdentityMatrix implements IDoubleMatrix {
                 } else if (j == 0 || j == this.size - 1 || i == j || data[i][j] != data[i][j - 1]
                         || data[i][j] != data[i][j + 1]) {
 
-                    sb.append(BigDecimal.valueOf(data[i][j]).setScale(1, RoundingMode.HALF_UP)).append(" ");
+                    sb.append(data[i][j]).append(" ");
                     dots = false;
                 }
             }

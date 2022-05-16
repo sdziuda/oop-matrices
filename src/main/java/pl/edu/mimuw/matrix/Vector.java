@@ -4,16 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 
-import static java.lang.Math.*;
-
-public class Vector implements IDoubleMatrix {
-    private final double[] values;
+public class Vector extends ColumnMatrix {
 
     public Vector(double... values) {
-        assert values != null && values.length > 0;
-
-        this.values = new double[values.length];
-        System.arraycopy(values, 0, this.values, 0, values.length);
+        super(Shape.vector(values.length), values);
     }
 
     @Override
@@ -75,52 +69,6 @@ public class Vector implements IDoubleMatrix {
         return new Vector(result);
     }
 
-    public double get(int row, int column) {
-        this.shape().assertInShape(row, column);
-
-        return this.values[row];
-    }
-
-    public double[][] data() {
-        final double[][] result = new double[this.values.length][1];
-
-        for (int i = 0; i < this.values.length; i++) {
-            result[i][0] = this.values[i];
-        }
-
-        return result;
-    }
-
-    public double normOne() {
-        double result = 0;
-
-        for (double value : this.values) {
-            result += abs(value);
-        }
-
-        return result;
-    }
-
-    public double normInfinity() {
-        double result = 0;
-
-        for (double value : this.values) {
-            result = max(result, abs(value));
-        }
-
-        return result;
-    }
-
-    public double frobeniusNorm() {
-        double result = 0;
-
-        for (double value : this.values) {
-            result += value * value;
-        }
-
-        return sqrt(result);
-    }
-
     @Override
     public String toString() {
         final var sb = new StringBuilder();
@@ -131,9 +79,5 @@ public class Vector implements IDoubleMatrix {
                         .append("\n"));
 
         return sb.toString();
-    }
-
-    public Shape shape() {
-        return Shape.vector(this.values.length);
     }
 }

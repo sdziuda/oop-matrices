@@ -6,6 +6,7 @@ public abstract class RegularMatrix implements IDoubleMatrix {
 
     protected RegularMatrix(Shape shape, double... values) {
         assert shape.rows > 0 && shape.columns > 0;
+        assert values != null && values.length > 0;
 
         this.shape = shape;
         this.values = new double[values.length];

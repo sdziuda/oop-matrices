@@ -23,6 +23,8 @@ public interface IDoubleMatrix {
     }
 
     default IDoubleMatrix times(double scalar) {
+        if (scalar == 0) return new ZeroMatrix(this.shape());
+
         final double[][] result = new double[this.shape().rows][this.shape().columns];
 
         for (int i = 0; i < this.shape().rows; i++) {
